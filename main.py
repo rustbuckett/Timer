@@ -44,7 +44,6 @@ def reset():
 def count_down(pause=False):
     global PAUSE_TIMER
     global TIMER
-    # print(PAUSE_TIMER)
     hours = int(TIMER / 3600)
     if TIMER / 60 >= 60:
         minutes = 0
@@ -58,9 +57,7 @@ def count_down(pause=False):
         TIMER -= 1
         PAUSE_TIMER = window.after(1000, count_down)
     elif TIMER == 0 and pause is False:
-        # window.bell()
         pygame.mixer.music.play()
-        # pygame.event.wait()
         mb.showinfo(message="Time's up!")
         reset()
     else:
