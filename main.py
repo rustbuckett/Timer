@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox as mb
 import pygame # just for playing the alarm sound
+from os import path
 
 '''
 
@@ -9,8 +10,9 @@ It might be nice if it made a sound and maybe popped up an alert
 
 '''
 
+alarm_file = path.abspath(path.join(path.dirname(__file__), "./assets/mixkit-rooster-crowing-in-the-morning-2462.wav"))
 pygame.init()
-pygame.mixer.music.load("./assets/mixkit-rooster-crowing-in-the-morning-2462.wav")
+pygame.mixer.music.load(alarm_file)
 
 BLACK = "#000000"
 WHITE = "#ffffff"
@@ -23,8 +25,21 @@ PAUSE_TIMER = None
 def start():
     global TIMER
     if TIMER is None:
-        TIMER = int(time_entry.get())
+        TIMER = parse_time(time_entry.get())
     count_down()
+
+def parse_time(time):
+    if ':' in time:
+        tl = time.split(':')
+        print(tl)
+        if len(tl) == 3:
+            seconds = (int(tl[0]) * 3600) + (int(tl[1]) * 60) + int(tl[2])
+        elif len(tl) == 2:
+            seconds = (int(tl[0]) * 60) + int(tl[1])
+    else:
+        seconds = int(time)
+    print(f"Seconds: {seconds}")
+    return seconds
 
 # Timer Pause
 
@@ -45,10 +60,11 @@ def count_down(pause=False):
     global PAUSE_TIMER
     global TIMER
     hours = int(TIMER / 3600)
-    if TIMER / 60 >= 60:
-        minutes = 0
-    else:
-        minutes = int(TIMER / 60)
+    # if TIMER / 60 >= 60:
+    #     minutes = 0
+    # else:
+    #     minutes = int(TIMER / 60)
+    minutes = int((TIMER % 3600) / 60)
     seconds = TIMER % 60
     time_remaining = f"{hours:02}:{minutes:02}:{seconds:02}"
     print(f"{TIMER}->{time_remaining}")
